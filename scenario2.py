@@ -28,7 +28,7 @@ def main():
     assert labo["Alexandre"] == "F410"
 
     # test occupation de bureau
-    occupation = occupation_bureaux
+    occupation = occupation_bureaux(labo)
     assert "F305" not in occupation
     assert "F410" in occupation
 

@@ -1,27 +1,8 @@
 from laboratoire2_json import *
-
-'''
-Interface sur la labo avec menu textuel.
-'''
-
-def afficher_menu():
-    print("1- Enregistrer une arrivée ")
-    print("2- Enregistrer un départ ")
-    print("3- Modifier un bureau ")
-    print("4- Modifier un nom ")
-    print('5- Présence d\'une personne ')
-    print("6- Obtenir le bureau d\'un membre ")
-    print("7- Obtenir le listing complet ")
-    print("8- Afficher l\'occupation des bureaux ")
-    print("9- Afficher les modifications de bureaux")
-    print("0- Quitter ")
+from menu_simple2 import *
 
 
-
-def demander_choix():
-    return int(input("Votre choix: "))
   
-
 def gerer_arrivee(labo):
     try:
         nom = input("Nom ? ")
@@ -45,10 +26,12 @@ def modifier_bureau(labo):
     try:
         nom = input("Nom ? ")
         nouveau_bureau = input("Nouveau bureau ? ")
+        if nom not in labo:
+            raise AbsentException
         changer_bureau(labo, nom, nouveau_bureau)
-        print ("Modification effectuée")
+        print("Modification effectuée")
     except AbsentException:
-        print("Nom iconnu")
+        print("Nom inconnu")
 
 
 def modifier_nom(labo):      
@@ -86,42 +69,38 @@ def liste_bureaux(labo):
             print(f"- {nom}")
 
 
-def traiter_choix(choix, labo):
-    if choix == 1:
-        gerer_arrivee(labo)
-    elif choix == 2:
-        gerer_depart(labo)
-    elif choix == 3:
-        modifier_bureau(labo)
-    elif choix == 4:
-        modifier_nom(labo)
-    elif choix == 5:
-        verifier_membre(labo)
-    elif choix ==6:
-        verifier_bureau(labo)
-    elif choix ==7:
-        listing_complet(labo)
-    elif choix == 8:
-        liste_bureaux(labo)
-    elif choix == 9:
-        importer_csv(labo)
-    elif choix == 0:
-        print("Quitter")
-        sauvegarde_data(labo)
-    else :
-        print("Choix invalide")
+
+
+def importer_fichier_csv(labo):
+    nom_fichier = input("Nom du fichier CSV à importer ? ")
+    rapport = importer_csv(labo, nom_fichier)
+    print("\nRapport d’import :")
+    print(rapport)
+    sauvegarde_data(labo)
+    print("Les données importées ont été sauvegardées.")
+
 
 
 
 def main():
-    quitter = False
-    labo = laboratoire()
-    while not quitter:
-        afficher_menu()
-        choix = demander_choix()
-        traiter_choix(choix, labo)
-        quitter = choix == 0
+    labo = laboratoire()  
+
+    menu = Menu()
+    ajouter_entree(menu, "Enregistrer une arrivée", gerer_arrivee, labo)
+    ajouter_entree(menu, "Enregistrer un départ", gerer_depart, labo)
+    ajouter_entree(menu, "Modifier un bureau", modifier_bureau, labo)
+    ajouter_entree(menu, "Modifier un nom", modifier_nom, labo)
+    ajouter_entree(menu, "Présence d'une personne", verifier_membre, labo)
+    ajouter_entree(menu, "Obtenir le bureau d’un membre", verifier_bureau, labo)
+    ajouter_entree(menu, "Obtenir le listing complet", listing_complet, labo)
+    ajouter_entree(menu, "Afficher l’occupation des bureaux", liste_bureaux, labo)
+    ajouter_entree(menu, "Importer un fichier CSV et afficher les modifications", importer_fichier_csv, labo)
+
+    gerer(menu)  
+    sauvegarde_data(labo)  
+    print("\nLes données ont été sauvegardées.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
+

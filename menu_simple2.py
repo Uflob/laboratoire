@@ -1,4 +1,4 @@
-from laboratoire2 import *
+from laboratoire2_json import *
 
 '''
 menu est une liste d'intitulés
@@ -6,8 +6,8 @@ menu est une liste d'intitulés
 def Menu():
     return []
 
-def ajouter_entree(menu,intitulé,fn, *parametres):
-    menu.append((intitulé, fn, parametres))
+def ajouter_entree(menu,intitule,fn, *parametres):
+    menu.append((intitule, fn, parametres))
 
 
 def traiter(menu,choix):
@@ -20,18 +20,18 @@ def traiter(menu,choix):
 def selection(menu):
     while True :
         try:
-            numero = int(input("Votre choix"))
+            numero = int(input("Votre choix: "))
             if 0 <= numero <= len(menu):
                 return numero
             else:
-                print("Pas un numéro du menu")
+                print("Ceci n'est pas un numéro du menu")
         except ValueError:
             print ("Incorrect...")
 
 
 def afficher_menu (menu):
-    for indice, (intitulé,_,_) in enumerate(menu,1):
-        print(f"{indice:2d} - {intitulé}")
+    for indice, (intitule,_,_) in enumerate(menu,1):
+        print(f"{indice:2d} - {intitule}")
     print(f"{0:2} - Quitter")
 
 

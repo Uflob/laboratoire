@@ -17,27 +17,35 @@ class PresentException(LaboException):
 """R1 : Initialiser le laboratoire"""
 
 def laboratoire():
-    return {}
+    try:
+        with open("data_labo.txt", "r") as file:
+            labo = json.load(file)
+    except FileNotFoundError:
+        labo = {}
+    return labo
 
 def sauvegarde_data(labo):
     with open("data_labo.txt", "w+") as file :
         json.dump(labo,file)
 
-def importer_csv(labo):
+
+def importer_csv(labo, fichier="labo_csv.csv"):
     differences = []
-    with open("labo_csv.csv", newline = '') as csvfichier:
+    with open(fichier, newline='') as csvfichier:
         lecteur = csv.DictReader(csvfichier)
-        for ligne in lecteur :
+        for ligne in lecteur:
             nom = ligne["Nom"]
             bureau = ligne[" Bureau"]
-            if nom not in labo :
+            if nom not in labo:
                 labo[nom] = bureau
-            elif bureau != labo[nom] :
-                differences.append(f"{nom} : {labo[nom]} est maintenant en {bureau}")
+            elif bureau != labo[nom]:
+                differences.append(f"{nom} : {labo[nom]} est maintenant en {bureau}.")
     if differences:
-        print (f"Voici les modifications : ")
+        texte = "Voici les modifications :\n"
         for diff in differences:
-            print (f". {diff}")
+            texte += "- " + diff + "\n"
+        return texte
+
 
 
 
