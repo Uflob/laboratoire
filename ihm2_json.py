@@ -34,11 +34,17 @@ def modifier_bureau(labo):
         print("Nom inconnu")
 
 
-def modifier_nom(labo):      
+def modifier_nom(labo):
     ancien_nom = input("Nom actuel ? ")
+    if ancien_nom not in labo:
+        print("Nom inconnu")
+        return
     nouveau_nom = input("Nouveau nom ? ")
-    changer_nom(labo,ancien_nom,nouveau_nom)
-    print ("Modification effectuée")
+    try:
+        changer_nom(labo, ancien_nom, nouveau_nom)
+        print("Modification effectuée")
+    except PresentException:
+        print("Impossible : ce nom existe déjà.")
 
 
 def verifier_membre(labo):      

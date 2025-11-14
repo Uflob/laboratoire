@@ -36,16 +36,17 @@ def importer_csv(labo, fichier="labo_csv.csv"):
         for ligne in lecteur:
             nom = ligne["Nom"]
             bureau = ligne[" Bureau"]
-            if nom not in labo:
-                labo[nom] = bureau
-            elif bureau != labo[nom]:
-                differences.append(f"{nom} : {labo[nom]} est maintenant en {bureau}.")
+            try:
+                enregistrer_arrivee(labo, nom, bureau)
+            except PresentException:
+                if labo[nom] != bureau:
+                    differences.append(f"{nom} : {labo[nom]} est maintenant en {bureau}.")
+                    changer_bureau(labo, nom, bureau)
     if differences:
         texte = "Voici les modifications :\n"
         for diff in differences:
             texte += "- " + diff + "\n"
         return texte
-
 
 
 
@@ -65,9 +66,16 @@ def enregistrer_depart(labo, nom):
 """R1 : Gérer les modification"""
 
 def changer_bureau(labo, nom, nouveau_bureau):
+    if nom not in labo:
+        raise AbsentException
     labo[nom] = nouveau_bureau
 
-def changer_nom(labo, ancien_nom, nouveau_nom):     
+
+def changer_nom(labo, ancien_nom, nouveau_nom):
+    if ancien_nom not in labo:
+        raise AbsentException
+    if nouveau_nom in labo:
+        raise PresentException
     labo[nouveau_nom] = labo[ancien_nom]
     del labo[ancien_nom]
 
